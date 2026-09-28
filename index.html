@@ -1,0 +1,58 @@
+function confirmDate() {
+
+    const time =
+        document.getElementById("selectedTime").value;
+
+    if (!selectedDate) {
+        alert("გთხოვ, აირჩიე თარიღი ❤️");
+        return;
+    }
+
+    if (!time) {
+        alert("გთხოვ, აირჩიე საათი ❤️");
+        return;
+    }
+
+    const day =
+        String(selectedDate.getDate()).padStart(2, "0");
+
+    const month =
+        String(selectedDate.getMonth() + 1).padStart(2, "0");
+
+    const year =
+        selectedDate.getFullYear();
+
+    const formattedDate =
+        `${day}.${month}.${year}`;
+
+    // Google Sheets / Apps Script
+    const googleScriptURL =
+        "https://script.google.com/macros/s/AKfycbyxg0-bNoDuzRa8XPhaSCvLODpd1z-1RYQLqY7GLG6FVD0SPgnKd6_eqN7BXguCdLFDUg/exec";
+
+    const data = {
+        activity: selectedActivity,
+        date: formattedDate,
+        time: time
+    };
+
+    fetch(googleScriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(data)
+    });
+
+    // საბოლოო გვერდზე ინფორმაციის ჩვენება
+    document.getElementById("finalActivity")
+        .textContent = selectedActivity;
+
+    document.getElementById("finalDate")
+        .textContent = formattedDate;
+
+    document.getElementById("finalTime")
+        .textContent = time;
+
+    showPage(4);
+}
