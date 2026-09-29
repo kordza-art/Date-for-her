@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Date For You ❤️</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(135deg,#ffe0ec,#fff5f8,#ffd1e3);
+ color:#a51d55;text-align:center;
+ overflow-x:hidden
+}
+.page{
+ display:none;min-height:100vh;
+ padding:35px 18px 50px;
+ flex-direction:column;
+ align-items:center;justify-content:center
+}
+.page.active{display:flex}
+h1{font-size:clamp(27px,7vw,38px);margin:12px 0}
+p{font-size:18px;line-height:1.5}
+.heart{font-size:45px;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+button{
+ border:0;border-radius:30px;padding:15px 28px;
+ font-size:18px;font-weight:bold;cursor:pointer;
+ box-shadow:0 5px 15px #b84c7540;
+ touch-action:manipulation
+}
+.yes{background:#e83e78;color:white}
+.no{background:#fff;color:#d52d69;position:relative}
+.buttons{display:flex;gap:20px;justify-content:center;
+ align-items:center;margin-top:25px;min-height:90px;width:100%}
+.options{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:14px;width:100%;max-width:500px;margin-top:20px
+}
+.option{
+ background:white;border:3px solid transparent;
+ border-radius:18px;padding:9px;color:#a51d55;
+ font-size:16px;font-weight:bold;overflow:hidden
+}
+.option img{width:100%;height:130px;object-fit:cover;
+ border-radius:12px;display:block;margin-bottom:9px}
+.option.selected{border-color:#ed4b88;background:#ffe0ed}
+.mainbtn{background:#e83e78;color:white;margin-top:25px}
+input,select{
+ padding:13px;border:2px solid #f3a0bd;border-radius:14px;
+ font-size:17px;background:white;color:#a51d55
+}
+label{font-size:17px;margin:12px 0 6px}
+#calendar{width:100%;max-width:370px;background:white;
+ border-radius:20px;padding:15px;margin-top:20px}
+.calhead{display:flex;justify-content:space-between;align-items:center}
+.calhead button{padding:8px 14px;background:#ffe0ec;color:#b51c5b}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:15px}
+.days div{padding:9px 0;border-radius:50%;font-size:14px}
+.days .weekday{font-weight:bold;color:#c66b8e}
+.days .day{cursor:pointer;background:#fff0f5}
+.days .day.chosen{background:#e83e78;color:white}
+.days .day.disabled{opacity:.25;pointer-events:none}
+.small{font-size:13px;color:#bd6086}
+</style>
+</head>
+
+<body>
+
+<section class="page active" id="p1">
+ <div class="heart">💖</div>
+ <h1>Wanna go on a date with me?</h1>
+ <p>Choose wisely, my love 😘</p>
+ <div class="buttons">
+  <button class="yes" onclick="showPage(2)">A) Yes! 💕</button>
+  <button class="no" id="noBtn">B) No 😈</button>
+ </div>
+ <p class="small">You know there's only one right answer 😉</p>
+</section>
+
+<section class="page" id="p2">
+ <div class="heart">💗</div>
+ <h1>ძალიანაც კარგი! ❤️</h1>
+ <p>მოდი ავარჩიოთ რას გავაკეთებთ.</p>
+
+ <div class="options">
+  <button class="option" onclick="choose(this,'ყავა და ტკბილეული ☕')">
+   <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=600&q=80">
+   A) ყავა და ტკბილეული ☕
+  </button>
+  <button class="option" onclick="choose(this,'პარკში სეირნობა 🌳')">
+   <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=600&q=80">
+   B) პარკში სეირნობა 🌳
+  </button>
+  <button class="option" onclick="choose(this,'ბურგერი, შაურმა და ნაყინი 🍔')">
+   <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80">
+   C) ბურგერი, შაურმა და ნაყინი 🍔
+  </button>
+  <button class="option" onclick="choose(this,'კინოს საღამო 🎬')">
+   <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80">
+   D) კინოს საღამო 🎬
+  </button>
+ </div>
+ <button class="mainbtn" onclick="toCalendar()">შემდეგი ❤️</button>
+</section>
+
+<section class="page" id="p3">
+ <div class="heart">💌</div>
+ <h1>შესანიშნავი არჩევანია!</h1>
+ <p>მოდი ახლა თარიღი ავარჩიოთ.</p>
+
+ <div id="calendar">
+  <div class="calhead">
+   <button onclick="changeMonth(-1)">❮</button>
+   <b id="monthTitle"></b>
+   <button onclick="changeMonth(1)">❯</button>
+  </div>
+  <div class="days" id="days"></div>
+ </div>
+
+ <label for="time">შეხვედრის საათი</label>
+ <input type="time" id="time" value="18:00">
+
+ <p id="selectedDate">აირჩიე დღე კალენდარში ❤️</p>
+ <button class="mainbtn" onclick="finish()">დადასტურება 💖</button>
+</section>
+
+<section class="page" id="p4">
+ <div class="heart">💞</div>
+ <h1>ყველაფერი ჩანიშნულია!</h1>
+ <p>შეხვედრამდე ❤️</p>
+ <p>Can't wait to see you! 🥰</p>
+ <div id="summary"></div>
+</section>
+
+<script>
+let activity="";
+let chosenDate="";
+let current=new Date();
+current.setDate(1);
+
+function showPage(n){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById('p'+n).classList.add('active');
+ window.scrollTo(0,0);
+}
+
+const noBtn=document.getElementById('noBtn');
+function runAway(e){
+ if(e)e.preventDefault();
+ const x=Math.random()*Math.max(0,window.innerWidth-130);
+ const y=Math.random()*Math.max(0,window.innerHeight-100);
+ noBtn.style.position='fixed';
+ noBtn.style.left=x+'px';
+ noBtn.style.top=y+'px';
+ noBtn.style.zIndex=1000;
+}
+noBtn.addEventListener('mouseover',runAway);
+noBtn.addEventListener('touchstart',runAway,{passive:false});
+noBtn.addEventListener('click',runAway);
+
+function choose(el,name){
+ activity=name;
+ document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
+ el.classList.add('selected');
+}
+
+function toCalendar(){
+ if(!activity){alert('ჯერ აირჩიე პაემნის გეგმა ❤️');return}
+ showPage(3);
+ renderCalendar();
+}
+
+const months=['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი',
+'ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'];
+
+function changeMonth(n){
+ current.setMonth(current.getMonth()+n);
+ renderCalendar();
+}
+
+function renderCalendar(){
+ const year=current.getFullYear(),month=current.getMonth();
+ document.getElementById('monthTitle').textContent=months[month]+' '+year;
+ const days=document.getElementById('days');
+ days.innerHTML='';
+ ['ორშ','სამ','ოთხ','ხუთ','პარ','შაბ','კვი'].forEach(d=>{
+  let el=document.createElement('div');
+  el.className='weekday';el.textContent=d;days.appendChild(el);
+ });
+ let first=new Date(year,month,1).getDay();
+ first=(first+6)%7;
+ for(let i=0;i<first;i++)days.appendChild(document.createElement('div'));
+ const count=new Date(year,month+1,0).getDate();
+ const today=new Date();today.setHours(0,0,0,0);
+ for(let d=1;d<=count;d++){
+  const date=new Date(year,month,d);
+  const el=document.createElement('div');
+  el.className='day';el.textContent=d;
+  if(date<today)el.classList.add('disabled');
+  if(chosenDate===`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`)
+   el.classList.add('chosen');
+  el.onclick=()=>{
+   chosenDate=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+   document.getElementById('selectedDate').textContent=
+    'არჩეულია: '+d+' '+months[month]+' '+year+' ❤️';
+   renderCalendar();
+  };
+  days.appendChild(el);
+ }
+}
+
+async function finish(){
+ const time=document.getElementById('time').value;
+ if(!chosenDate){alert('ჯერ აირჩიე თარიღი ❤️');return}
+ if(!time){alert('აირჩიე შეხვედრის საათი ❤️');return}
+
+ const dateText=chosenDate+' '+time;
+ document.getElementById('summary').innerHTML=
+  '<p>💖 '+activity+'</p><p>📅 '+dateText+'</p>';
+
+ showPage(4);
+
+ // შეტყობინების გაგზავნა FormSubmit-ის საშუალებით
+ const data={
+  _subject:'ახალი პაემანი ჩაინიშნა! ❤️',
+  _template:'table',
+  Activity:activity,
+  Date:chosenDate,
+  Time:time
+ };
+
+ try{
+  const response=await fetch(
+   'https://formsubmit.co/ajax/nkordzadze2@seu.edu.ge',
+   {method:'POST',
+    headers:{'Content-Type':'application/json',Accept:'application/json'},
+    body:JSON.stringify(data)}
+  );
+  const result=await response.json();
+  if(!result.success)console.log('Email service response:',result);
+ }catch(error){
+  console.log('Email error:',error);
+ }
+}
+
+renderCalendar();
+</script>
+</body>
+</html>
